@@ -1,7 +1,7 @@
-import { Link } from 'react-router-dom';
-import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
-import heroImage from '@/assets/hero-medical.jpg';
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import heroImage from "@/assets/hero-medical.jpg";
 
 const Hero = () => {
   return (
@@ -20,8 +20,9 @@ const Hero = () => {
             Your Health, Our Priority
           </h1>
           <p className="text-lg md:text-xl text-white/90 mb-8">
-            Quality medicines and healthcare products delivered to your doorstep.
-            Shop with confidence from our extensive range of trusted brands.
+            Quality medicines and healthcare products delivered to your
+            doorstep. Shop with confidence from our extensive range of trusted
+            brands.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Link to="/products">
@@ -31,7 +32,11 @@ const Hero = () => {
               </Button>
             </Link>
             <Link to="/about">
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+              <Button
+                size="lg"
+                variant="transparent"
+                className="border-white  hover:text-white hover:bg-transparent"
+              >
                 Learn More
               </Button>
             </Link>
