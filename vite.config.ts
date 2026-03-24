@@ -5,7 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  // base: "/med-quest-shop/", // 👈 IMPORTANT (GitHub repo name)
+  base: "/med-quest-shop/", // 👈 IMPORTANT (GitHub repo name)
   server: {
     host: "::",
     port: 8080,
