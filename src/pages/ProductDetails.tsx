@@ -97,7 +97,7 @@ const ProductDetails = () => {
                   <p className="text-sm text-muted-foreground mb-2">{product.category}</p>
                   <h1 className="text-3xl font-bold mb-4">{product.name}</h1>
                   <p className="text-2xl font-bold text-primary mb-4">
-                    ${product.price.toFixed(2)}
+                    Rs. {product.price.toFixed(2)}
                   </p>
                   <p className="text-muted-foreground leading-relaxed">
                     {product.description}

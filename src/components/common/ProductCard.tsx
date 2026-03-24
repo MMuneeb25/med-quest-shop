@@ -50,7 +50,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
         </CardContent>
         <CardFooter className="p-4 pt-0 flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-primary">${product.price.toFixed(2)}</p>
+            <p className="text-2xl font-bold text-primary">Rs.{product.price.toFixed(2)}</p>
             {product.inStock ? (
               <p className="text-xs text-secondary">In Stock</p>
             ) : (

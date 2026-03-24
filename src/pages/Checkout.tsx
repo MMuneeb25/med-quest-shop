@@ -151,12 +151,12 @@ const Checkout = () => {
                     <span className="text-muted-foreground">
                       {item.name} x{item.quantity}
                     </span>
-                    <span className="font-medium">${(item.price * item.quantity).toFixed(2)}</span>
+                    <span className="font-medium">Rs. {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
                 <div className="border-t pt-3 flex justify-between">
                   <span className="font-bold">Total</span>
-                  <span className="font-bold text-xl text-primary">${total.toFixed(2)}</span>
+                  <span className="font-bold text-xl text-primary">Rs. {total.toFixed(2)}</span>
                 </div>
               </div>
               <Button type="submit" size="lg" className="w-full bg-gradient-accent hover:opacity-90">
