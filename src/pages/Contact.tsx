@@ -1,21 +1,40 @@
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import Header from '@/components/layout/Header';
-import Footer from '@/components/layout/Footer';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Label } from '@/components/ui/label';
-import { Mail, Phone, MapPin } from 'lucide-react';
-import { toast } from 'sonner';
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+import Header from "@/components/layout/Header";
+import Footer from "@/components/layout/Footer";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Mail, Phone, MapPin } from "lucide-react";
+import { toast } from "sonner";
 
-const contactSchema = yup.object({
-  name: yup.string().trim().required('Name is required').max(100, 'Name must be less than 100 characters'),
-  email: yup.string().trim().email('Invalid email address').required('Email is required').max(255, 'Email must be less than 255 characters'),
-  subject: yup.string().trim().required('Subject is required').max(150, 'Subject must be less than 150 characters'),
-  message: yup.string().trim().required('Message is required').max(1000, 'Message must be less than 1000 characters'),
-}).required();
+const contactSchema = yup
+  .object({
+    name: yup
+      .string()
+      .trim()
+      .required("Name is required")
+      .max(100, "Name must be less than 100 characters"),
+    email: yup
+      .string()
+      .trim()
+      .email("Invalid email address")
+      .required("Email is required")
+      .max(255, "Email must be less than 255 characters"),
+    subject: yup
+      .string()
+      .trim()
+      .required("Subject is required")
+      .max(150, "Subject must be less than 150 characters"),
+    message: yup
+      .string()
+      .trim()
+      .required("Message is required")
+      .max(1000, "Message must be less than 1000 characters"),
+  })
+  .required();
 
 type ContactFormData = yup.InferType<typeof contactSchema>;
 
@@ -30,17 +49,14 @@ const Contact = () => {
   });
 
   const onSubmit = async (data: ContactFormData) => {
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 1500)),
-      {
-        loading: 'Sending message...',
-        success: () => {
-          reset();
-          return 'Message sent successfully! We\'ll get back to you soon.';
-        },
-        error: 'Failed to send message. Please try again.',
-      }
-    );
+    toast.promise(new Promise((resolve) => setTimeout(resolve, 1500)), {
+      loading: "Sending message...",
+      success: () => {
+        reset();
+        return "Message sent successfully! We'll get back to you soon.";
+      },
+      error: "Failed to send message. Please try again.",
+    });
   };
 
   return (
@@ -64,7 +80,7 @@ const Contact = () => {
                   <Mail className="h-8 w-8" />
                 </div>
                 <h3 className="font-semibold mb-2">Email Us</h3>
-                <p className="text-muted-foreground">support@medistore.com</p>
+                <p className="text-muted-foreground">support@ShahMedical.com</p>
               </div>
               <div className="text-center p-6">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 text-secondary mb-4">
@@ -78,7 +94,9 @@ const Contact = () => {
                   <MapPin className="h-8 w-8" />
                 </div>
                 <h3 className="font-semibold mb-2">Visit Us</h3>
-                <p className="text-muted-foreground">123 Medical Plaza, City 12345</p>
+                <p className="text-muted-foreground">
+                  123 Medical Plaza, City 12345
+                </p>
               </div>
             </div>
 
@@ -87,33 +105,45 @@ const Contact = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
                 <div>
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" {...register('name')} />
+                  <Input id="name" {...register("name")} />
                   {errors.name && (
-                    <p className="text-sm text-destructive mt-1">{errors.name.message}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {errors.name.message}
+                    </p>
                   )}
                 </div>
                 <div>
                   <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" {...register('email')} />
+                  <Input id="email" type="email" {...register("email")} />
                   {errors.email && (
-                    <p className="text-sm text-destructive mt-1">{errors.email.message}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {errors.email.message}
+                    </p>
                   )}
                 </div>
                 <div>
                   <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" {...register('subject')} />
+                  <Input id="subject" {...register("subject")} />
                   {errors.subject && (
-                    <p className="text-sm text-destructive mt-1">{errors.subject.message}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {errors.subject.message}
+                    </p>
                   )}
                 </div>
                 <div>
                   <Label htmlFor="message">Message</Label>
-                  <Textarea id="message" rows={5} {...register('message')} />
+                  <Textarea id="message" rows={5} {...register("message")} />
                   {errors.message && (
-                    <p className="text-sm text-destructive mt-1">{errors.message.message}</p>
+                    <p className="text-sm text-destructive mt-1">
+                      {errors.message.message}
+                    </p>
                   )}
                 </div>
-                <Button type="submit" size="lg" className="w-full bg-gradient-accent hover:opacity-90">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full bg-gradient-accent hover:opacity-90"
+                >
                   Send Message
                 </Button>
               </form>
