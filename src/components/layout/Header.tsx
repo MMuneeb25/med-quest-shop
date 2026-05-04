@@ -1,18 +1,18 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Search, ShoppingCart, User, Menu, X } from "lucide-react";
+import { Search, ShoppingCart, User, Menu, X, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCart } from "@/hooks/useCart";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { useRewards } from "@/hooks/useRewards";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
   const { itemCount } = useCart();
-  const { isAuthenticated } = useSelector((state: RootState) => state.user);
+  const { isAuthenticated, pointsBalance } = useRewards();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,6 +59,12 @@ const Header = () => {
               Products
             </Link>
             <Link
+              to="/bundles"
+              className="text-sm font-medium hover:text-primary transition-smooth"
+            >
+              Bundles
+            </Link>
+            <Link
               to="/blogs"
               className="text-sm font-medium hover:text-primary transition-smooth"
             >
@@ -79,7 +85,26 @@ const Header = () => {
           </nav>
 
           {/* Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-2">
+            {isAuthenticated && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link to="/rewards">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="hidden md:flex items-center gap-1 px-2"
+                    >
+                      <Star className="h-4 w-4 text-yellow-500" />
+                      <span className="text-xs font-bold text-yellow-600">
+                        {pointsBalance} pts
+                      </span>
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>View your Sehat Rewards</TooltipContent>
+              </Tooltip>
+            )}
             <Link to="/cart" className="relative">
               <Button variant="ghost" size="icon">
                 <ShoppingCart className="h-5 w-5" />
@@ -137,6 +162,13 @@ const Header = () => {
               Products
             </Link>
             <Link
+              to="/bundles"
+              className="text-sm font-medium hover:text-primary transition-smooth"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Bundles
+            </Link>
+            <Link
               to="/blogs"
               className="text-sm font-medium hover:text-primary transition-smooth"
               onClick={() => setIsMenuOpen(false)}
@@ -157,6 +189,16 @@ const Header = () => {
             >
               Contact
             </Link>
+            {isAuthenticated && (
+              <Link
+                to="/rewards"
+                className="flex items-center gap-2 text-sm font-medium hover:text-primary transition-smooth"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <Star className="h-4 w-4 text-yellow-500" />
+                <span>{pointsBalance} Sehat Points</span>
+              </Link>
+            )}
           </nav>
         </div>
       )}

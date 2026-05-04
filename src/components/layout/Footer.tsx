@@ -83,6 +83,22 @@ const Footer = () => {
                   Contact
                 </Link>
               </li>
+              <li>
+                <Link
+                  to="/bundles"
+                  className="text-muted-foreground hover:text-primary transition-smooth"
+                >
+                  Care Bundles
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/rewards"
+                  className="text-muted-foreground hover:text-primary transition-smooth"
+                >
+                  Sehat Rewards
+                </Link>
+              </li>
             </ul>
           </div>
 

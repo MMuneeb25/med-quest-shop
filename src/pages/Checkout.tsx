@@ -9,7 +9,9 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useCart } from '@/hooks/useCart';
+import { useRewards } from '@/hooks/useRewards';
 import { toast } from 'sonner';
+import OrderGiftBanner from '@/components/cart/OrderGiftBanner';
 
 const checkoutSchema = yup.object({
   fullName: yup.string().required('Full name is required').max(100),
@@ -26,6 +28,9 @@ type CheckoutFormData = yup.InferType<typeof checkoutSchema>;
 const Checkout = () => {
   const navigate = useNavigate();
   const { items, total, clearCart } = useCart();
+  const { appliedDiscount, clearRewardsOnOrder, cancelRedemption } = useRewards();
+  const finalTotal = Math.max(0, total - appliedDiscount);
+
   const {
     register,
     handleSubmit,
@@ -41,16 +46,19 @@ const Checkout = () => {
 
   const paymentMethod = watch('paymentMethod');
 
-  const onSubmit = async (data: CheckoutFormData) => {
-    // Simulate payment processing
+  const onSubmit = async (_data: CheckoutFormData) => {
+    const orderId = `order-${Date.now()}`;
     toast.promise(
       new Promise((resolve) => setTimeout(resolve, 2000)),
       {
         loading: 'Processing your order...',
         success: () => {
+          clearRewardsOnOrder(orderId, total);
+          cancelRedemption();
           clearCart();
+          toast.success("Your free gift has been added to your order!", { duration: 3000 });
           setTimeout(() => navigate('/'), 2000);
-          return 'Order placed successfully! Redirecting...';
+          return 'Order placed successfully! Check your Sehat Points.';
         },
         error: 'Failed to process order',
       }
@@ -143,9 +151,9 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div className="lg:col-span-1">
-            <div className="bg-card rounded-lg p-6 sticky top-24">
-              <h2 className="text-xl font-bold mb-4">Order Summary</h2>
-              <div className="space-y-3 mb-6">
+            <div className="bg-card rounded-lg p-6 sticky top-24 space-y-4">
+              <h2 className="text-xl font-bold">Order Summary</h2>
+              <div className="space-y-2">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
                     <span className="text-muted-foreground">
@@ -154,11 +162,25 @@ const Checkout = () => {
                     <span className="font-medium">Rs. {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
-                <div className="border-t pt-3 flex justify-between">
+              </div>
+
+              <OrderGiftBanner cartItemCount={items.length} variant="checkout" />
+
+              <div className="space-y-2 border-t pt-3">
+                {appliedDiscount > 0 && (
+                  <div className="flex justify-between text-sm text-green-700">
+                    <span>Points Discount</span>
+                    <span>- Rs. {appliedDiscount.toFixed(2)}</span>
+                  </div>
+                )}
+                <div className="flex justify-between">
                   <span className="font-bold">Total</span>
-                  <span className="font-bold text-xl text-primary">Rs. {total.toFixed(2)}</span>
+                  <span className="font-bold text-xl text-primary">
+                    Rs. {finalTotal.toFixed(2)}
+                  </span>
                 </div>
               </div>
+
               <Button type="submit" size="lg" className="w-full bg-gradient-accent hover:opacity-90">
                 Place Order
               </Button>

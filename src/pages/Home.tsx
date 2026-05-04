@@ -2,7 +2,8 @@ import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/home/Hero';
 import FeaturedProducts from '@/components/home/FeaturedProducts';
-import LuckyDraw from '@/components/home/LuckyDraw';
+import SehatReward from '@/components/home/SehatReward';
+import CareBundles from '@/components/home/CareBundles';
 
 const Home = () => {
   return (
@@ -11,7 +12,8 @@ const Home = () => {
       <main className="flex-1">
         <Hero />
         <FeaturedProducts />
-        <LuckyDraw />
+        <SehatReward />
+        <CareBundles />
       </main>
       <Footer />
     </div>
