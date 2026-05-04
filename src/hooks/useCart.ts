@@ -31,7 +31,7 @@ export const useCart = () => {
   };
 
   const getItemCount = () => {
-    return items.reduce((count, item) => count + item.quantity, 0);
+    return items.length;
   };
 
   return {
