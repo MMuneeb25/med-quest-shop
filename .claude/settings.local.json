@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(yarn tsc *)",
+      "Bash(yarn dev *)",
+      "Bash(curl -s http://localhost:5173/med-quest-shop/)",
+      "Bash(curl -s http://localhost:5173/)",
+      "Bash(yarn build *)",
+      "Bash(lsof -ti:5173)",
+      "Bash(xargs kill *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(yarn deploy *)",
+      "Bash(lsof -ti:8080)"
+    ]
+  }
+}

@@ -52,8 +52,15 @@ const productsSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     },
-    setFilter: (state, action: PayloadAction<{ key: keyof ProductsState['filters']; value: any }>) => {
-      state.filters[action.payload.key] = action.payload.value;
+    setFilter: (
+      state,
+      action: PayloadAction<{ key: 'category' | 'brand' | 'searchQuery'; value: string } | { key: 'priceRange'; value: [number, number] }>
+    ) => {
+      if (action.payload.key === 'priceRange') {
+        state.filters.priceRange = action.payload.value;
+      } else {
+        state.filters[action.payload.key] = action.payload.value;
+      }
     },
     clearFilters: (state) => {
       state.filters = initialState.filters;

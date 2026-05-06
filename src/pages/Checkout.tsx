@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import { useMutation } from '@tanstack/react-query';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import { Button } from '@/components/ui/button';
@@ -12,6 +13,8 @@ import { useCart } from '@/hooks/useCart';
 import { useRewards } from '@/hooks/useRewards';
 import { toast } from 'sonner';
 import OrderGiftBanner from '@/components/cart/OrderGiftBanner';
+import { ordersApi } from '@/api/endpoints';
+import type { CreateOrderPayload } from '@shahmedical/types';
 
 const checkoutSchema = yup.object({
   fullName: yup.string().required('Full name is required').max(100),
@@ -31,6 +34,10 @@ const Checkout = () => {
   const { appliedDiscount, clearRewardsOnOrder, cancelRedemption } = useRewards();
   const finalTotal = Math.max(0, total - appliedDiscount);
 
+  const { mutateAsync: createOrder, isPending } = useMutation({
+    mutationFn: (payload: CreateOrderPayload) => ordersApi.create(payload),
+  });
+
   const {
     register,
     handleSubmit,
@@ -39,30 +46,47 @@ const Checkout = () => {
     watch,
   } = useForm<CheckoutFormData>({
     resolver: yupResolver(checkoutSchema),
-    defaultValues: {
-      paymentMethod: 'card',
-    },
+    defaultValues: { paymentMethod: 'card' },
   });
 
   const paymentMethod = watch('paymentMethod');
 
-  const onSubmit = async (_data: CheckoutFormData) => {
-    const orderId = `order-${Date.now()}`;
-    toast.promise(
-      new Promise((resolve) => setTimeout(resolve, 2000)),
-      {
-        loading: 'Processing your order...',
-        success: () => {
-          clearRewardsOnOrder(orderId, total);
-          cancelRedemption();
-          clearCart();
-          toast.success("Your free gift has been added to your order!", { duration: 3000 });
-          setTimeout(() => navigate('/'), 2000);
-          return 'Order placed successfully! Check your Sehat Points.';
+  const onSubmit = async (data: CheckoutFormData) => {
+    const loadingToast = toast.loading('Processing your order...');
+    try {
+      const payload: CreateOrderPayload = {
+        items: items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+        shippingInfo: {
+          fullName: data.fullName,
+          email: data.email,
+          phone: data.phone,
+          address: data.address,
+          city: data.city,
+          zipCode: data.zipCode,
         },
-        error: 'Failed to process order',
-      }
-    );
+        paymentMethod: data.paymentMethod === 'cash' ? 'CASH_ON_DELIVERY' : 'CARD',
+        discount: appliedDiscount,
+        pointsRedeemed: 0,
+      };
+
+      const response = await createOrder(payload);
+      const orderId = response.data.data.id;
+
+      toast.dismiss(loadingToast);
+      clearRewardsOnOrder(orderId, total);
+      cancelRedemption();
+      clearCart();
+      toast.success('Order placed successfully! Check your Sehat Points.', { duration: 4000 });
+      toast.success('Your free gift has been added to your order!', { duration: 3000 });
+      setTimeout(() => navigate('/'), 2000);
+    } catch {
+      toast.dismiss(loadingToast);
+      toast.error('Failed to process order. Please try again.');
+    }
   };
 
   if (items.length === 0) {
@@ -156,9 +180,7 @@ const Checkout = () => {
               <div className="space-y-2">
                 {items.map((item) => (
                   <div key={item.id} className="flex justify-between text-sm">
-                    <span className="text-muted-foreground">
-                      {item.name} x{item.quantity}
-                    </span>
+                    <span className="text-muted-foreground">{item.name} x{item.quantity}</span>
                     <span className="font-medium">Rs. {(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
@@ -175,14 +197,17 @@ const Checkout = () => {
                 )}
                 <div className="flex justify-between">
                   <span className="font-bold">Total</span>
-                  <span className="font-bold text-xl text-primary">
-                    Rs. {finalTotal.toFixed(2)}
-                  </span>
+                  <span className="font-bold text-xl text-primary">Rs. {finalTotal.toFixed(2)}</span>
                 </div>
               </div>
 
-              <Button type="submit" size="lg" className="w-full bg-gradient-accent hover:opacity-90">
-                Place Order
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full bg-gradient-accent hover:opacity-90"
+                disabled={isPending}
+              >
+                {isPending ? 'Processing...' : 'Place Order'}
               </Button>
             </div>
           </div>
